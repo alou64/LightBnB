@@ -51,10 +51,6 @@ exports.getUserWithId = getUserWithId;
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser =  function(user) {
-  // const userId = Object.keys(users).length + 1;
-  // user.id = userId;
-  // users[userId] = user;
-  // return Promise.resolve(user);
   return pool
     .query(`
       INSERT INTO users (name, email, password)
@@ -160,9 +156,28 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  const queryParams = [];
+
+  queryParams.push(`${property.title}`);
+  queryParams.push(`${property.description}`);
+  queryParams.push(`${property.owner_id}`);
+  queryParams.push(`${property.cover_photo_url}`);
+  queryParams.push(`${property.thumbnail_photo_url}`);
+  queryParams.push(`${property.cost_per_night}`);
+  queryParams.push(`${property.parking_spaces}`);
+  queryParams.push(`${property.number_of_bathrooms}`);
+  queryParams.push(`${property.number_of_bedrooms}`);
+  queryParams.push(true);
+  queryParams.push(`${property.province}`);
+  queryParams.push(`${property.city}`);
+  queryParams.push(`${property.country}`);
+  queryParams.push(`${property.street}`);
+  queryParams.push(`${property.post_code}`);
+
+  const queryString = `
+  INSERT INTO properties (title, description, owner_id, cover_photo_url, thumbnail_photo_url, cost_per_night, parking_spaces, number_of_bathrooms, number_of_bedrooms, active, province, city, country, street, post_code)
+  VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15);
+  `
+  return pool.query(queryString, queryParams).then(res => res.rows);
 }
 exports.addProperty = addProperty;
