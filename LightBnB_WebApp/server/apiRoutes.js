@@ -6,11 +6,12 @@ module.exports = function(router, database) {
     .catch(e => {
       console.error(e);
       res.send(e)
-    }); 
+    });
   });
 
   router.get('/reservations', (req, res) => {
     const userId = req.session.userId;
+    console.log(userId);
     if (!userId) {
       res.error("💩");
       return;
